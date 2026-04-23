@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PokeHub.lb</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f7f8fc;
+  color: #111;
+}
+
+/* NAV */
+nav {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  background: white;
+  padding: 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+nav button {
+  margin: 0 10px;
+  padding: 10px 18px;
+  background: #6c5ce7;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* SECTIONS */
+section { display:none; padding:20px; }
+.active { display:block; }
+
+/* GRID */
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:15px;
+  max-width:1000px;
+  margin:auto;
+}
+
+.card {
+  background:white;
+  padding:15px;
+  border-radius:15px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.card img {
+  width:100%;
+  border-radius:10px;
+}
+
+button.buy {
+  margin-top:10px;
+  padding:8px 12px;
+  background:#6c5ce7;
+  color:white;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* CART BUTTON */
+#cartBtn {
+  position:fixed;
+  bottom:90px;
+  right:20px;
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  background:#6c5ce7;
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:22px;
+  cursor:pointer;
+}
+
+/* CART BOX */
+#cart {
+  display:none;
+  position:fixed;
+  right:20px;
+  bottom:160px;
+  background:white;
+  padding:15px;
+  border-radius:15px;
+  width:220px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.15);
+}
+
+/* CONNECT */
+#connect {
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:white;
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  padding:10px;
+  box-shadow:0 -2px 10px rgba(0,0,0,0.08);
+}
+
+#connect a {
+  color:#6c5ce7;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+/* FLOATING POKEMON (SUBTLE) */
+.poke {
+  position:fixed;
+  width:55px;
+  opacity:0.12;
+  pointer-events:none;
+}
+
+.p1 { top:20%; left:6%; }
+.p2 { top:60%; right:10%; }
+.p3 { bottom:20%; left:15%; }
+.p4 { top:35%; right:25%; }
+</style>
+</head>
+
+<body>
+
+<!-- FLOATING POKEMON -->
+<img class="poke p1" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png">
+<img class="poke p2" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png">
+<img class="poke p3" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png">
+<img class="poke p4" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png">
+
+<nav>
+  <button onclick="show('home')">Home</button>
+  <button onclick="show('products')">Products</button>
+  <button onclick="show('about')">About</button>
+</nav>
+
+<section id="home" class="active">
+  <h1>🔥 PokeHub.lb</h1>
+</section>
+
+<section id="products">
+
+<h1>🛒 Products</h1>
+
+<div class="grid" id="grid">
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1607082349566-187342175e2f">
+    <h3>PSA Mystery Box</h3>
+    <p>PSA Grade Range: 8–10</p>
+    <p>$79.99</p>
+    <button class="buy" onclick="add('PSA Box',79.99)">Add</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1613771404784-3a6b7f3c2b6a">
+    <h3>Guaranteed PSA 10</h3>
+    <p>$129.99</p>
+    <button class="buy" onclick="add('PSA 10',129.99)">Add</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1612036781124-847f8939b0a8">
+    <h3>Sleeved Booster Pack (Surging Sparks)</h3>
+    <p>$16.99</p>
+    <button class="buy" onclick="add('Surging Sparks',16.99)">Add</button>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1613771404581-7c2b6c0a1f5d">
+    <h3>Sleeved Booster Pack (Perfect Order)</h3>
+    <p>$12.99</p>
+    <button class="buy" onclick="add('Perfect Order',12.99)">Add</button>
+  </div>
+
+</div>
+
+</section>
+
+<section id="about">
+<h1>ℹ️ About Us</h1>
+<p>PokeHub.lb is a Pokémon store in Lebanon selling sealed products and graded cards.</p>
+</section>
+
+<!-- CART -->
+<div id="cartBtn" onclick="toggleCart()">🛒</div>
+
+<div id="cart">
+  <h4>Cart</h4>
+  <div id="items"></div>
+</div>
+
+<!-- CONNECT -->
+<div id="connect">
+  <a href="https://www.instagram.com/pokehub.lb/" target="_blank">Instagram</a>
+  <a href="https://chat.whatsapp.com/DUzNkAJnhQECvx66kd1xLd?mode=gi_t" target="_blank">Group</a>
+  <a href="https://wa.me/96103956888" target="_blank">WhatsApp</a>
+</div>
+
+<script>
+
+let cart=[];
+
+function show(id){
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function add(n,p){
+  cart.push({n,p});
+  document.getElementById("items").innerHTML =
+  cart.map(i=>`<p>${i.n} - $${i.p}</p>`).join("");
+}
+
+function toggleCart(){
+  let c=document.getElementById("cart");
+  c.style.display = c.style.display==="block"?"none":"block";
+}
+
+</script>
+
+</body>
+</html>
