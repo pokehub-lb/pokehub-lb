@@ -6,40 +6,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #ffffff; /* PURE WHITE FIX */
-  color: #111;
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0b0b0b; /* black theme */
+  color:#ffffff;
+  overflow-x:hidden;
 }
 
-/* NAV */
-nav {
-  position: sticky;
-  top: 0;
-  display: flex;
-  justify-content: center;
-  background: #ffffff;
-  padding: 15px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+nav{
+  position:sticky;
+  top:0;
+  display:flex;
+  justify-content:center;
+  background:#111;
+  padding:15px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.5);
+  z-index:10;
 }
 
-nav button {
-  margin: 0 10px;
-  padding: 10px 18px;
-  background: #6c5ce7;
-  border: none;
-  color: white;
-  border-radius: 10px;
-  cursor: pointer;
+nav button{
+  margin:0 10px;
+  padding:10px 18px;
+  background:#e50914; /* red accent */
+  border:none;
+  color:white;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
 }
 
-/* SECTIONS */
-section { display:none; padding:20px; }
-.active { display:block; }
+section{display:none;padding:20px;position:relative;z-index:2;}
+.active{display:block;}
 
-/* GRID */
-.grid {
+.grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
   gap:15px;
@@ -47,110 +47,139 @@ section { display:none; padding:20px; }
   margin:auto;
 }
 
-.card {
-  background:white;
+.card{
+  background:#1a1a1a;
   padding:15px;
   border-radius:15px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.08);
+  box-shadow:0 5px 15px rgba(0,0,0,0.6);
+  border:1px solid #333;
 }
 
-.card img {
+.card img{
   width:100%;
   border-radius:10px;
+  height:180px;
+  object-fit:cover;
 }
 
-/* BUTTON */
-button.buy {
+button.buy{
   margin-top:10px;
   padding:8px 12px;
-  background:#6c5ce7;
+  background:#e50914;
   color:white;
   border:none;
   border-radius:8px;
   cursor:pointer;
+  width:100%;
+  font-weight:bold;
 }
 
-/* CART */
-#cartBtn {
+#cartBtn{
   position:fixed;
   bottom:90px;
   right:20px;
-  width:65px; /* bigger */
-  height:65px; /* bigger */
+  width:70px;
+  height:70px;
   border-radius:50%;
-  background:#6c5ce7;
+  background:#e50914;
   color:white;
   display:flex;
   justify-content:center;
   align-items:center;
-  font-size:24px;
+  font-size:26px;
   cursor:pointer;
-  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+  box-shadow:0 10px 25px rgba(0,0,0,0.6);
+  z-index:20;
 }
 
-#cart {
+#cart{
   display:none;
   position:fixed;
   right:20px;
-  bottom:160px;
-  background:white;
+  bottom:170px;
+  background:#111;
   padding:15px;
   border-radius:15px;
-  width:230px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+  width:240px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.7);
+  z-index:20;
+  border:1px solid #333;
 }
 
-/* CONNECT */
-#connect {
+#connect{
   position:fixed;
   bottom:0;
   width:100%;
-  background:white;
+  background:#111;
   display:flex;
   justify-content:center;
   gap:20px;
   padding:12px;
-  box-shadow:0 -2px 10px rgba(0,0,0,0.06);
+  box-shadow:0 -2px 10px rgba(0,0,0,0.5);
+  z-index:10;
 }
 
-#connect a {
-  color:#6c5ce7;
+#connect a{
+  color:#e50914;
   text-decoration:none;
   font-weight:bold;
 }
 
-/* 🧸 FLOATING POKEMON (BIGGER + MORE) */
-.poke {
+/* FLOATING POKEBALLS */
+.pokeball{
   position:fixed;
-  width:85px; /* BIGGER FIX */
-  opacity:0.18;
-  pointer-events:none;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  background:white;
+  opacity:0.15;
   z-index:1;
-  animation: floaty 12s infinite ease-in-out;
+  animation: floaty 10s infinite ease-in-out;
 }
 
-.p1 { top:10%; left:5%; }
-.p2 { top:25%; right:8%; animation-delay:1s; }
-.p3 { top:55%; left:10%; animation-delay:2s; }
-.p4 { top:70%; right:15%; animation-delay:3s; }
-.p5 { bottom:15%; left:40%; animation-delay:4s; }
+.pokeball:before{
+  content:'';
+  position:absolute;
+  top:50%;
+  left:0;
+  width:100%;
+  height:8px;
+  background:#e50914;
+  transform:translateY(-50%);
+}
 
-@keyframes floaty {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-25px); }
-  100% { transform: translateY(0px); }
+.pb1{top:10%;left:5%;}
+.pb2{top:30%;right:10%;animation-delay:1s;}
+.pb3{top:60%;left:15%;animation-delay:2s;}
+.pb4{bottom:20%;right:20%;animation-delay:3s;}
+
+@keyframes floaty{
+  0%{transform:translateY(0px);}
+  50%{transform:translateY(-25px);}
+  100%{transform:translateY(0px);}
+}
+
+/* PIKACHU SIDE */
+.pikachu{
+  position:fixed;
+  right:-40px;
+  bottom:120px;
+  width:160px;
+  z-index:5;
+  filter:drop-shadow(0 10px 20px rgba(0,0,0,0.6));
 }
 </style>
 </head>
-
 <body>
 
-<!-- FLOATING POKEMON -->
-<img class="poke p1" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png">
-<img class="poke p2" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png">
-<img class="poke p3" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png">
-<img class="poke p4" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png">
-<img class="poke p5" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png">
+<!-- FLOATING POKEBALLS -->
+<div class="pokeball pb1"></div>
+<div class="pokeball pb2"></div>
+<div class="pokeball pb3"></div>
+<div class="pokeball pb4"></div>
+
+<!-- PIKACHU STICKING OUT -->
+<img class="pikachu" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png">
 
 <nav>
   <button onclick="show('home')">Home</button>
@@ -159,67 +188,58 @@ button.buy {
 </nav>
 
 <section id="home" class="active">
-  <h1>🔥 PokeHub.lb</h1>
+  <h1>⚡ PokeHub.lb</h1>
+  <p>Black • White • Red Pokémon Store</p>
 </section>
 
 <section id="products">
-
 <div class="grid">
 
   <div class="card">
     <img src="https://images.unsplash.com/photo-1607082349566-187342175e2f">
     <h3>PSA Mystery Box</h3>
-    <p>PSA Grade Range: 8–10</p>
+    <p>Grade 8–10 potential</p>
     <p>$79.99</p>
-    <button class="buy">Add</button>
+    <button class="buy" onclick="addToCart('PSA Mystery Box')">Add</button>
   </div>
 
   <div class="card">
     <img src="https://images.unsplash.com/photo-1613771404784-3a6b7f3c2b6a">
     <h3>Guaranteed PSA 10</h3>
     <p>$129.99</p>
-    <button class="buy">Add</button>
-  </div>
-
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1612036781124-847f8939b0a8">
-    <h3>Sleeved Booster (Surging Sparks)</h3>
-    <p>$16.99</p>
-    <button class="buy">Add</button>
-  </div>
-
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1613771404581-7c2b6c0a1f5d">
-    <h3>Sleeved Booster (Perfect Order)</h3>
-    <p>$12.99</p>
-    <button class="buy">Add</button>
+    <button class="buy" onclick="addToCart('PSA 10')">Add</button>
   </div>
 
 </div>
-
 </section>
 
 <section id="about">
 <h1>About Us</h1>
-<p>PokeHub.lb — Pokémon cards store in Lebanon.</p>
+<p>PokeHub.lb — Premium Pokémon cards in Lebanon.</p>
 </section>
 
-<div id="cartBtn">🛒</div>
-
-<div id="cart">
-<h4>Cart</h4>
-</div>
+<div id="cartBtn" onclick="toggleCart()">🛒</div>
+<div id="cart"></div>
 
 <div id="connect">
   <a href="https://www.instagram.com/pokehub.lb/">Instagram</a>
-  <a href="https://chat.whatsapp.com/DUzNkAJnhQECvx66kd1xLd?mode=gi_t">Group</a>
   <a href="https://wa.me/96103956888">WhatsApp</a>
 </div>
 
 <script>
 function show(id){
-  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+let cart=[];
+function addToCart(item){
+  cart.push(item);
+  document.getElementById('cart').innerHTML='<h4>Cart</h4>'+cart.map(i=>'<p>'+i+'</p>').join('');
+}
+function toggleCart(){
+  const c=document.getElementById('cart');
+  c.style.display=c.style.display==='block'?'none':'block';
 }
 </script>
 
