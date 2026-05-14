@@ -453,13 +453,27 @@
             const phone    = document.getElementById('phone').value.trim();
             const address  = document.getElementById('address').value.trim();
 
+            const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            const phoneValid = /^[\+\d][\d\s\-\(\)]{6,}$/.test(phone);
+
             if (!fullName || !email || !phone || !address) {
                 showToast('Please fill in all fields', true);
-                // highlight empty fields
                 ['fullName','email','phone','address'].forEach(id => {
                     const el = document.getElementById(id);
                     el.style.borderColor = el.value.trim() ? '' : '#DC143C';
                 });
+                return;
+            }
+
+            if (!emailValid) {
+                showToast('Please enter a valid email address', true);
+                document.getElementById('email').style.borderColor = '#DC143C';
+                return;
+            }
+
+            if (!phoneValid) {
+                showToast('Please enter a valid phone number', true);
+                document.getElementById('phone').style.borderColor = '#DC143C';
                 return;
             }
 
