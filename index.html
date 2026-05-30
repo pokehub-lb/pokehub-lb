@@ -521,3 +521,155 @@
 </script>
 </body>
 </html>
+
+<div class="modal-overlay"></div>
+    <div class="modal">
+        <div class="modal-header">
+            <span><i class="fas fa-shopping-basket"></i> Your Cart</span>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            </div>
+        <div class="modal-footer">
+            <div class="subtotal"><span>Subtotal</span><span>$0.00</span></div>
+            <div class="tax"><span>VAT (11%)</span><span>$0.00</span></div>
+            <div class="total"><span>Total</span><span>$0.00</span></div>
+            <button id="checkoutBtn" class="checkout-btn" disabled>Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script type="text/javascript">
+        // 1. INITIALIZE EMAILJS WITH YOUR ACCOUNT KEY
+        (function() {
+            emailjs.init("0SFZVimAeV2K2F_HI"); 
+        })();
+
+        // 2. PRODUCT CONFIGURATION DATA
+        // Maps directly to your mystery box buttons: onclick="addToCart(101)"
+        const productsData = {
+            101: { name: "PSA 8–10 Graded Mystery Box", price: 79.99, emoji: "📦" },
+            102: { name: "PSA 10 Guaranteed Mystery Box", price: 139.99, emoji: "🏆" }
+        };
+
+        // 3. STORE STATE
+        let cart = [];
+
+        // 4. ADD TO CART MECHANISM (Fixes the mystery box crash)
+        window.addToCart = function(productId) {
+            const product = productsData[productId];
+            if (!product) return;
+
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: product.name,
+                    price: product.price,
+                    emoji: product.emoji,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            showToast(`Added ${product.name} to cart!`);
+        };
+
+        // 5. UPDATE CART INTERFACE AND FINANCIALS
+        function updateCart() {
+            // Update Header Counter Badge
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartBadge').innerText = totalItems;
+
+            // Render Items into Drawer UI
+            const modalBody = document.querySelector('.modal-body');
+            if (cart.length === 0) {
+                modalBody.innerHTML = `
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon"><i class="fas fa-shopping-cart"></i></div>
+                        <p>Your cart is empty</p>
+                    </div>`;
+                document.getElementById('checkoutBtn').disabled = true;
+            } else {
+                let cartHTML = '';
+                cart.forEach(item => {
+                    cartHTML += `
+                        <div class="cart-item">
+                            <div class="cart-item-emoji">${item.emoji}</div>
+                            <div class="cart-item-details">
+                                <div class="cart-item-name">${item.name}</div>
+                                <div class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+                            </div>
+                            <div class="quantity-control">
+                                <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+                                <span style="margin: 0 4px; font-weight: bold;">${item.quantity}</span>
+                                <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+                                <button class="remove-btn" onclick="removeCartItem(${item.id})" style="margin-left: 8px;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>`;
+                });
+                modalBody.innerHTML = cartHTML;
+                document.getElementById('checkoutBtn').disabled = false;
+            }
+
+            // Financial Calculations
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.11; // 11% Lebanon VAT
+            const total = subtotal + tax;
+
+            // Render safe decimal prices
+            document.querySelector('.subtotal span:last-child').innerText = `$${subtotal.toFixed(2)}`;
+            document.querySelector('.tax span:last-child').innerText = `$${tax.toFixed(2)}`;
+            document.querySelector('.total span:last-child').innerText = `$${total.toFixed(2)}`;
+        }
+
+        // 6. QUANTITY CONTROL MODIFIERS
+        window.changeQty = function(id, changeAmount) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.quantity += changeAmount;
+                if (item.quantity <= 0) {
+                    removeCartItem(id);
+                } else {
+                    updateCart();
+                }
+            }
+        };
+
+        window.removeCartItem = function(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCart();
+        };
+
+        // 7. TOAST POPUP SYSTEM
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        // 8. SIDEBAR SLIDE INTERACTIONS
+        const openCartMenu = () => {
+            document.querySelector('.modal-overlay').classList.add('active');
+            document.querySelector('.modal').classList.add('active');
+            document.querySelector('.modal').style.display = 'flex';
+        };
+
+        const closeCartMenu = () => {
+            document.querySelector('.modal-overlay').classList.remove('active');
+            document.querySelector('.modal').classList.remove('active');
+        };
+
+        document.getElementById('cartIcon').addEventListener('click', openCartMenu);
+        document.querySelector('.close-modal').addEventListener('click', closeCartMenu);
+        document.querySelector('.modal-overlay').addEventListener('click', closeCartMenu);
+
+        // Initialize empty state views right away on window compilation
+        updateCart();
+    </script>
