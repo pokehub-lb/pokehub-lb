@@ -288,7 +288,7 @@
     </div>
     <div class="modal-footer">
         <div class="subtotal"><span>Subtotal:</span><span id="subtotal">$0.00</span></div>
-        <div class="tax"><span>Tax (10%):</span><span id="taxAmount">$0.00</span></div>
+        <div class="tax"><span>Delivery Fee:</span><span id="taxAmount">$5.00</span></div>
         <div class="total"><span>Total:</span><span id="totalPrice">$0.00</span></div>
         <button class="checkout-btn" id="checkoutBtn" disabled="">Proceed to Checkout</button>
     </div>
@@ -461,17 +461,17 @@
 
     function updatePrices() {
         const sub = cart.reduce((s,i) => s + i.price * i.quantity, 0);
-        const tax = sub * 0.1;
-        const total = sub + tax;
+        const delivery = cart.length > 0 ? 5 : 0;
+        const total = sub + delivery;
         document.getElementById('subtotal').textContent = `$${sub.toFixed(2)}`;
-        document.getElementById('taxAmount').textContent = `$${tax.toFixed(2)}`;
+        document.getElementById('taxAmount').textContent = `$${delivery.toFixed(2)}`;
         document.getElementById('totalPrice').textContent = `$${total.toFixed(2)}`;
         checkoutBtn.disabled = cart.length === 0;
         const summary = document.getElementById('checkoutSummary');
         if (summary) {
             summary.innerHTML = cart.map(i => `<div class="summary-row"><span>${i.emoji || '📦'} ${i.name} × ${i.quantity}</span><span>$${(i.price*i.quantity).toFixed(2)}</span></div>`).join('') +
                 `<div class="summary-row"><span>Subtotal</span><span>$${sub.toFixed(2)}</span></div>
-                 <div class="summary-row"><span>Tax (10%)</span><span>$${tax.toFixed(2)}</span></div>
+                 <div class="summary-row"><span>Delivery Fee</span><span>$${delivery.toFixed(2)}</span></div>
                  <div class="summary-total"><span>Total: $${total.toFixed(2)}</span></div>`;
         }
     }
@@ -521,8 +521,8 @@
         completePurchaseBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
         const sub = cart.reduce((s,i) => s + i.price * i.quantity, 0);
-        const tax = sub * 0.1;
-        const total = sub + tax;
+        const delivery = cart.length > 0 ? 5 : 0;
+        const total = sub + delivery;
         const orderLines = cart.map(i => `${i.emoji || '📦'} ${i.name} x${i.quantity} — $${(i.price*i.quantity).toFixed(2)}`).join('\n');
 
         try {
@@ -530,7 +530,7 @@
                 await emailjs.send('service_bdoowwl', 'template_zwea33j', {
                     to_name: fullName, to_email: email, phone, address,
                     order_list: orderLines,
-                    subtotal: `$${sub.toFixed(2)}`, tax: `$${tax.toFixed(2)}`, total: `$${total.toFixed(2)}`,
+                    subtotal: `$${sub.toFixed(2)}`, tax: `$${delivery.toFixed(2)}`, total: `$${total.toFixed(2)}`,
                     payment: 'Cash on Delivery',
                 });
             }
